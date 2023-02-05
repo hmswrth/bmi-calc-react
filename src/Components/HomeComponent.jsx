@@ -4,12 +4,12 @@ import ChartComponent from "./ChartComponent";
 import "./Home.css";
 
 const HomeComponent = () => {
-  const [weight, setWeight] = useState(68);
-  const [height, setHeight] = useState(165);
-  const [calculatedBMI, setCalculatedBMI] = useState(0)
-  const [historicBmiData, setHistoricBmiData] = useState([])
+  const [weight, setWeight] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [calculatedBMI, setCalculatedBMI] = useState(0);
+  const [historicBmiData, setHistoricBmiData] = useState([]);
 
-  const bmi = useBMICalculator({height , weight})
+  const bmi = useBMICalculator({ height, weight });
 
   // onChange handler for weight and height
   const handleChange = (e) => {
@@ -20,18 +20,19 @@ const HomeComponent = () => {
     }
   };
 
-//  call the custom hook function to calculate the BMI
+  //  call the custom hook function to calculate the BMI
   const handleCalculateBMI = () => {
     // update the calculated bmi
-    setCalculatedBMI(bmi)
+    setCalculatedBMI(bmi);
     // update the hsitoricBmiData
-    setHistoricBmiData( prev  => (
-        [...prev, {
-            bmi : bmi,
-            date : new Date()
-        }]
-    ))
-  }
+    setHistoricBmiData((prev) => [
+      ...prev,
+      {
+        bmi: bmi,
+        date: new Date(),
+      },
+    ]);
+  };
 
   return (
     <div className="main-container">
@@ -52,12 +53,16 @@ const HomeComponent = () => {
           onChange={handleChange}
         />
       </div>
-      <button className="calculate-bmi-btn" onClick={handleCalculateBMI}>Calculate BMI</button>
+      <button className="calculate-bmi-btn" onClick={handleCalculateBMI}>
+        Calculate BMI
+      </button>
 
-      <h1 style={{color:'#fff'}}>{calculatedBMI}</h1>
-      <div className="chart-container">
-       <ChartComponent bmiData = {historicBmiData}/>
-      </div>
+      <h1 style={{ color: "#fff" }}>{calculatedBMI}</h1>
+      {historicBmiData.length > 0 && (
+        <div className="chart-container">
+          <ChartComponent bmiData={historicBmiData} />
+        </div>
+      )}
     </div>
   );
 };
